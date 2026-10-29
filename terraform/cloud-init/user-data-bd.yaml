@@ -1,0 +1,21 @@
+#cloud-config
+hostname: bd
+
+timezone: Europe/Madrid
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC4K2wVyv6krRLY5tIS+aNlINd5R1zTtp5EtRRnEbf41jllUx/xsz7JAdLojzafDVIZoXZnIcrQE2l0OVj87qELPlZkosTXRZdutlvGMgp30t+k6R3q8Zb9csQStgkssxZ81vudxQmlHMwS97WYbUXxJwYYDiQ3oV1aqJJbHm4U8+UiPqOdnrW/ar+GcAG9V4Wj9Pvmj57z0kt1a3FBj8XBj8AC0xh8eWIql+xFgm6AUvZeUIIMNPsFGjaSuYu+jBBkp/UrzfzzeF5IvrL6p20XaxAOhjuHoz1Gj0u6JXaU0L/Bh/P03255ZKqmfKdywpQsYmJf1zWvK6msUAuOg0hCxL9zQxIKUxetiwu/j7sk5Twh2YZgTMvsJxsx8FSx+NvFDtdspmMiaV46kqFcI9hvNwLyNE9nU1o7o22ysJhAv0u4GIIcNalyfHYWEiaxbUpd6FTdwkyP6cJCJHwZGBtbjxfXEwzext44FvtbJEXyCacmKWCBLG48AMeCMqmtasPxCYYFrCpsXGEIxXbTcmNn8Kquai1bHV6Ls54ogxvuepKOE+H8OGoPrbVdWGa7aIXEAdquijFXPvtbrRyML5YSZPrytbzRCbbfMlHJh3gnHaSWYmYzBRUayTZs2FA+rNhpq+vo5knkX6zQ4kwtFBAn+w5L0BqdziysVf1JNlrUlw== pablo@AcerLT           # PON-AQUI-TU-CLAVE-PUBLICA
+
+chpasswd:
+  expire: False
+  users:
+    - name: ubuntu
+      password: ubuntu      #Pon la que quieras
+      type: text
+
+package_update: true
+package_upgrade: true
