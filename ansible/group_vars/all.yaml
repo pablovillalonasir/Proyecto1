@@ -1,0 +1,8 @@
+# Red de datos (deben coincidir con terraform/variables.tf)
+ip_web_datos: "10.0.0.1"
+ip_bd_datos: "10.0.0.2"
+
+# Base de datos de la aplicación
+db_nombre: db_base
+db_usuario: pablo_db
+db_password: Pablo2027

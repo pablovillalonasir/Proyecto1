@@ -1,0 +1,16 @@
+- name: esperar a que cloud-init termine
+  command: cloud-init status --wait
+  changed_when: false
+
+- name: actualizar el sistema
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    upgrade: dist
+
+- name: instalar paquetes comunes
+  apt:
+    pkg:
+      - vim
+      - curl
+      - git

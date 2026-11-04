@@ -1,0 +1,52 @@
+- name: instalar MariaDB y dependencias de Ansible
+  apt:
+    pkg:
+      - mariadb-server
+      - python3-pymysql
+
+- name: MariaDB escucha solo en la red de datos
+  template:
+    src: 99-bind.cnf.j2
+    dest: /etc/mysql/mariadb.conf.d/99-bind.cnf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - restart mariadb
+
+- name: MariaDB habilitado y arrancado
+  service:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name: crear la base de datos
+  community.mysql.mysql_db:
+    name: "{{ db_nombre }}"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+
+- name: crear usuario que solo conecta desde el servidor web
+  community.mysql.mysql_user:
+    name: "{{ db_usuario }}"
+    host: "{{ ip_web_datos }}"
+    password: "{{ db_password }}"
+    priv: "{{ db_nombre }}.*:ALL"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+  no_log: true
+
+- name: comprobar si ya existe la tabla messages
+  community.mysql.mysql_query:
+    login_db: "{{ db_nombre }}"
+    login_unix_socket: /run/mysqld/mysqld.sock
+    query: "SHOW TABLES LIKE 'messages'"
+  register: tabla_messages
+  changed_when: false
+
+- name: crear las tablas de la aplicación
+  community.mysql.mysql_query:
+    login_db: "{{ db_nombre }}"
+    login_unix_socket: /run/mysqld/mysqld.sock
+    query: "{{ lookup('file', 'schema.sql') }}"
+  when: tabla_messages.rowcount[0] == 0

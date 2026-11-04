@@ -1,0 +1,53 @@
+- name: instalar Apache, PHP y dependencias de la aplicación
+  apt:
+    pkg:
+      - apache2
+      - libapache2-mod-php
+      - php-mysql
+      - php-mbstring
+      - mariadb-client
+
+- name: descargar la aplicación (sin tocarla si ya existe)
+  git:
+    repo: "{{ app_repo }}"
+    dest: "{{ web_docroot }}"
+    update: false
+
+- name: generar config.php desde la plantilla
+  template:
+    src: config.php.j2
+    dest: "{{ web_docroot }}/config.php"
+    owner: root
+    group: www-data
+    mode: "0640"
+
+- name: crear el virtual host
+  template:
+    src: vhost.conf.j2
+    dest: "/etc/apache2/sites-available/{{ web_servername }}.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reload apache2
+
+- name: activar el módulo rewrite
+  command: a2enmod rewrite
+  args:
+    creates: /etc/apache2/mods-enabled/rewrite.load
+  notify:
+    - restart apache2
+
+- name: activar el virtual host
+  command: "a2ensite {{ web_servername }}"
+  args:
+    creates: "/etc/apache2/sites-enabled/{{ web_servername }}.conf"
+  notify:
+    - reload apache2
+
+- name: desactivar el sitio por defecto
+  command: a2dissite 000-default
+  args:
+    removes: /etc/apache2/sites-enabled/000-default.conf
+  notify:
+    - reload apache2
