@@ -1,5 +1,5 @@
 #cloud-config
-hostname: web
+hostname: ${hostname}
 
 timezone: Europe/Madrid
 users:
@@ -17,5 +17,8 @@ chpasswd:
       password: debian       # Se puede cambiar por cualquier otra que queramos
       type: text
 
-package_update: true
-package_upgrade: true
+#package_update: true
+#package_upgrade: true
+
+# Quitamos package_update y package_upgrade ya que en el primer arranque estas máquinas 
+# no tendrán salida a internet (se la dará lb cuando este esté configurado).
