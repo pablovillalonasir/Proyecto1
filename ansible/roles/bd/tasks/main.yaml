@@ -26,14 +26,15 @@
     state: present
     login_unix_socket: /run/mysqld/mysqld.sock
 
-- name: crear usuario que solo conecta desde el servidor web
+- name: crear usuario que solo conecta desde los servidores web
   community.mysql.mysql_user:
     name: "{{ db_usuario }}"
-    host: "{{ ip_web_datos }}"
+    host: "{{ item }}"
     password: "{{ db_password }}"
     priv: "{{ db_nombre }}.*:ALL"
     state: present
     login_unix_socket: /run/mysqld/mysqld.sock
+  loop: "{{ groups['servidores_web'] | map('extract', hostvars, 'ip_datos') | list }}"
   no_log: true
 
 - name: comprobar si ya existe la tabla messages
