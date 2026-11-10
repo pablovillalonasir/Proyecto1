@@ -3,12 +3,33 @@
   roles:
     - role: commons
 
+# 1. lb: sistema y router NAT (los webs necesitan salir a internet a través de él)
+- hosts: servidores_lb
+  become: true
+  roles:
+    - role: commons
+    - role: router
+
+# 2. bd y webs: sistema
+- hosts: servidores_bd:servidores_web
+  become: true
+  roles:
+    - role: commons
+
+# 3. base de datos
 - hosts: servidores_bd
   become: true
   roles:
     - role: bd
 
+# 4. servidores web
 - hosts: servidores_web
   become: true
   roles:
     - role: web
+
+# 5. balanceador (cuando los backends ya existen)
+- hosts: servidores_lb
+  become: true
+  roles:
+    - role: haproxy
