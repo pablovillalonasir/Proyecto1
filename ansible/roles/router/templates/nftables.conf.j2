@@ -1,0 +1,10 @@
+#!/usr/sbin/nft -f
+flush ruleset
+
+# NAT: lo que sale de la red de balanceo hacia la red NAT se enmascara con la IP de lb
+table ip nat {
+    chain postrouting {
+        type nat hook postrouting priority srcnat; policy accept;
+        ip saddr {{ red_balanceo }} oifname "{{ lb_interfaz_nat }}" masquerade
+    }
+}
