@@ -1,0 +1,27 @@
+- name: activar el reenvío de paquetes IPv4
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: true
+    state: present
+    reload: true
+
+- name: instalar nftables
+  apt:
+    pkg: nftables
+
+- name: configurar NAT (masquerade) para la red de balanceo
+  template:
+    src: nftables.conf.j2
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - restart nftables
+
+- name: nftables habilitado y arrancado
+  service:
+    name: nftables
+    state: started
+    enabled: true
