@@ -3,7 +3,9 @@
 lb ansible_host=${ip_lb} ansible_user=debian
 
 [servidores_web]
-web ansible_host=${ip_web} ansible_user=debian
+%{ for nombre, w in webs ~}
+${nombre} ansible_host=${w.ip_balanceo} ansible_user=debian ip_datos=${w.ip_datos}
+%{ endfor ~}
 
 [servidores_bd]
 bd ansible_host=${ip_bd} ansible_user=ubuntu
