@@ -1,9 +1,4 @@
-- hosts: all
-  become: true
-  roles:
-    - role: commons
-
-# 1. lb: sistema y router NAT (los webs necesitan salir a internet a través de él)
+# 1. lb: sistema y router NAT (los backends necesitan salir a internet a través de él)
 - hosts: servidores_lb
   become: true
   roles:
