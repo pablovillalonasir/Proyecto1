@@ -2,6 +2,8 @@
     ServerName {{ web_servername }}
     DocumentRoot {{ web_docroot }}
 
+    Header always set X-Servidor "{{ inventory_hostname }}"
+
     <Directory {{ web_docroot }}>
         AllowOverride All
         Require all granted
