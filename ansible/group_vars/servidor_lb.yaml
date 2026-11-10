@@ -1,0 +1,2 @@
+lb_interfaz_nat: ens3        # interfaz de lb conectada a la red NAT
+lb_puerto_stats: 8404        # página de estadísticas de HAProxy
