@@ -38,6 +38,13 @@
   notify:
     - restart apache2
 
+- name: activar el módulo headers
+  command: a2enmod headers
+  args:
+    creates: /etc/apache2/mods-enabled/headers.load
+  notify:
+    - restart apache2
+
 - name: activar el virtual host
   command: "a2ensite {{ web_servername }}"
   args:
