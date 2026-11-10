@@ -1,3 +1,4 @@
+#cloud-config
 #Reciclado del antiguo user-data-web.yaml
 hostname: lb
 
