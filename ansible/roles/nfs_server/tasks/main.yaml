@@ -1,0 +1,27 @@
+- name: instalar el servidor NFS
+  apt:
+    pkg: nfs-kernel-server
+
+- name: crear el directorio que se exporta
+  file:
+    path: "{{ nfs_export }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: exportar el directorio solo a los servidores web
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - reexportar
+
+- name: servidor NFS habilitado y arrancado
+  service:
+    name: nfs-server
+    state: started
+    enabled: true
