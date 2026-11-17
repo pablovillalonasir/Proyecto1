@@ -34,11 +34,23 @@ variable "memoria_lb" {
   default     = 512
 }
 
+variable "memoria_nas" {
+  type        = number
+  description = "Memoria (MB) del servidor NAS."
+  default     = 512
+}
+
 # IP Balanceador
 
 variable "ip_lb_balanceo" {
   type    = string
   default = "10.0.77.1"
+}
+
+# IP del NAS en la red de balanceo
+variable "ip_nas_balanceo" {
+  type    = string
+  default = "10.0.77.21"
 }
 
 # Servidores Web (Backends).
