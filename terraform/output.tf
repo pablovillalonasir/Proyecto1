@@ -23,3 +23,10 @@ output "bd" {
     ip_datos = var.ip_bd_datos
   }
 }
+
+output "nas" {
+  value = {
+    nombre      = "p1-nas"
+    ip_balanceo = var.ip_nas_balanceo
+  }
+}
