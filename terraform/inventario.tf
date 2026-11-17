@@ -5,10 +5,11 @@ resource "local_file" "inventario" {
   content = templatefile("${path.module}/inventario.tftpl", {
     ip_lb = try(libvirt_domain.p1-lb.network_interface[0].addresses[0], "")
     ip_bd = try(libvirt_domain.p1-bd.network_interface[0].addresses[0], "")
+    ip_nas = var.ip_nas_balanceo
     webs  = var.webs
   })
 
   # Las IPs de los backends son estáticas por lo que tendremos que esperar a que existan las máquinas
-  depends_on = [libvirt_domain.p1-web]
+  depends_on = [libvirt_domain.p1-web, libvirt_domain.p1-nas]
 
 }
