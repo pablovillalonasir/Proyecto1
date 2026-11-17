@@ -2,6 +2,9 @@
 [servidores_lb]
 lb ansible_host=${ip_lb} ansible_user=debian
 
+[servidores_nfs]
+nas ansible_host=${ip_nas} ansible_user=debian
+
 [servidores_web]
 %{ for nombre, w in webs ~}
 ${nombre} ansible_host=${w.ip_balanceo} ansible_user=debian ip_datos=${w.ip_datos}
@@ -9,6 +12,10 @@ ${nombre} ansible_host=${w.ip_balanceo} ansible_user=debian ip_datos=${w.ip_dato
 
 # Los backends no tienen ruta desde el host (mi portátil): se accede saltando por lb (balanceador)
 [servidores_web:vars]
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null debian@${ip_lb}"'
+
+# El NAS tampoco tiene ruta desde el host: se accede saltando por lb
+[servidores_nfs:vars]
 ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null debian@${ip_lb}"'
 
 [servidores_bd]
