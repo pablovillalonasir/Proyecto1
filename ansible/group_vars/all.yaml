@@ -2,6 +2,9 @@
 red_balanceo: "10.0.77.0/24"
 ip_lb_balanceo: "10.0.77.1"
 ip_bd_datos: "10.0.0.2"
+ip_nas_balanceo: "10.0.77.21"
+
+nfs_export: /srv/nfs/app
 
 # Base de datos de la aplicación
 db_nombre: db_base
