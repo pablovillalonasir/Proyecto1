@@ -5,25 +5,32 @@
     - role: commons
     - role: router
 
-# 2. bd y webs: sistema
-- hosts: servidores_bd:servidores_web
+# 2. bd, webs y nas: sistema
+- hosts: servidores_bd:servidores_web:servidores_nfs
   become: true
   roles:
     - role: commons
 
-# 3. base de datos
+# 3. nas: servidor NFS (antes de que los webs monten su directorio)
+- hosts: servidores_nfs
+  become: true
+  roles:
+    - role: nfs_server
+
+# 4. base de datos
 - hosts: servidores_bd
   become: true
   roles:
     - role: bd
 
-# 4. servidores web
+# 5. servidores web: primero montan el NFS y después despliegan la aplicación
 - hosts: servidores_web
   become: true
   roles:
+    - role: nfs_client
     - role: web
 
-# 5. balanceador (cuando los backends ya existen)
+# 6. balanceador (cuando los backends ya existen)
 - hosts: servidores_lb
   become: true
   roles:
