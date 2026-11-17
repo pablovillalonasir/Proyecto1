@@ -1,0 +1,16 @@
+- name: instalar el cliente NFS
+  apt:
+    pkg: nfs-common
+
+- name: crear el punto de montaje (directorio de la aplicación)
+  file:
+    path: "{{ web_docroot }}"
+    state: directory
+
+- name: montar el directorio compartido del NAS (persistente en /etc/fstab)
+  ansible.posix.mount:
+    path: "{{ web_docroot }}"
+    src: "{{ ip_nas_balanceo }}:{{ nfs_export }}"
+    fstype: nfs
+    opts: "_netdev,hard"
+    state: mounted
