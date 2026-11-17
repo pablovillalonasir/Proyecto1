@@ -12,6 +12,7 @@
     repo: "{{ app_repo }}"
     dest: "{{ web_docroot }}"
     update: false
+  run_once: true
 
 - name: generar config.php desde la plantilla
   template:
@@ -20,6 +21,7 @@
     owner: root
     group: www-data
     mode: "0640"
+  run_once: true
 
 - name: crear el virtual host
   template:
