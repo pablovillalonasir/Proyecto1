@@ -18,5 +18,5 @@ chpasswd:
       password: debian
       type: text
 
-package_update: true
-package_upgrade: true
+#package_update: true
+#package_upgrade: true
