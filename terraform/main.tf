@@ -108,11 +108,12 @@ resource "libvirt_volume" "p1-bd-disk" {
 }
 
 resource "libvirt_cloudinit_disk" "p1-bd-cloudinit" {
-  name           = "p1-bd-cloudinit.iso"
-  pool           = var.libvirt_pool_name
-  user_data      = file("${path.module}/cloud-init/user-data-bd.yaml")
+  name      = "p1-bd-cloudinit.iso"
+  pool      = var.libvirt_pool_name
+  user_data = file("${path.module}/cloud-init/user-data-bd.yaml")
   network_config = templatefile("${path.module}/cloud-init/network-config-bd.yaml.tftpl", {
-    ip_datos = var.ip_bd_datos
+    ip_datos    = var.ip_bd_datos
+    ip_balanceo = var.ip_bd_balanceo
   })
 }
 
@@ -128,6 +129,10 @@ resource "libvirt_domain" "p1-bd" {
 
   network_interface {
     network_id = libvirt_network.p1-datos.id
+  }
+
+  network_interface {
+    network_id = libvirt_network.p1-balanceo.id
   }
 
   disk { volume_id = libvirt_volume.p1-bd-disk.id }
