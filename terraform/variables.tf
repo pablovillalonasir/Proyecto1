@@ -72,3 +72,9 @@ variable "ip_bd_datos" {
   type    = string
   default = "10.0.0.2"
 }
+
+# IP de bd en la red de balanceo (solo para llegar al NAS)
+variable "ip_bd_balanceo" {
+  type    = string
+  default = "10.0.77.31"
+}
