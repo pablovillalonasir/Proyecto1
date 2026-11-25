@@ -6,6 +6,10 @@ ip_nas_balanceo: "10.0.77.21"
 
 nfs_export: /srv/nfs/app
 
+# Copias de seguridad en el NAS (deben coincidir con terraform)
+ip_bd_balanceo: "10.0.77.31"
+nfs_export_backups: /srv/nfs/backups
+
 # Base de datos de la aplicación
 db_nombre: db_base
 db_usuario: pablo_db
