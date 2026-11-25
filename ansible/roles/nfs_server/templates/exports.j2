@@ -1,3 +1,4 @@
 {% for h in groups['servidores_web'] %}
 {{ nfs_export }} {{ hostvars[h].ansible_host }}(rw,sync,no_subtree_check,no_root_squash)
 {% endfor %}
+{{ nfs_export_backups }} {{ ip_bd_balanceo }}(rw,sync,no_subtree_check,root_squash)
