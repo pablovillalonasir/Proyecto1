@@ -10,7 +10,15 @@
     group: root
     mode: "0755"
 
-- name: exportar el directorio solo a los servidores web
+- name: crear el directorio de copias de seguridad que se exporta
+  file:
+    path: "{{ nfs_export_backups }}"
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: "0750"
+
+- name: exportar los directorios (aplicación a los webs, copias a bd)
   template:
     src: exports.j2
     dest: /etc/exports
