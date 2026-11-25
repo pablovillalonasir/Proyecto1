@@ -1,3 +1,7 @@
 web_servername: www.pablo.org
 web_docroot: /var/www/pablo
 app_repo: https://github.com/josedom24/guestbook_php.git
+
+# Directorios del NAS que montan los backends (lo usa el rol nfs_client)
+nfs_montajes:
+  - { export: "{{ nfs_export }}", path: "{{ web_docroot }}" }
