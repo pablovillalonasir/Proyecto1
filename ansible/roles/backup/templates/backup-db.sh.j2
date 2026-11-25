@@ -1,0 +1,26 @@
+#!/bin/bash
+# Generado por Ansible: no lo edites a mano
+set -euo pipefail
+
+DIR="{{ backup_dir }}"
+BD="{{ db_nombre }}"
+RETENCION={{ backup_retencion }}
+FECHA=$(date +%F_%H%M%S)
+DESTINO="$DIR/${BD}_${FECHA}.sql.gz"
+
+# Seguridad: si el NFS no está montado, no escribir en el disco local
+if ! mountpoint -q "$DIR"; then
+    echo "ERROR: $DIR no es un punto de montaje (NFS sin montar)" >&2
+    exit 1
+fi
+
+trap 'rm -f "$DESTINO.partial"' ERR
+
+# Volcado coherente (InnoDB) y comprimido; se renombra al terminar
+mariadb-dump --single-transaction --routines --triggers "$BD" | gzip > "$DESTINO.partial"
+mv "$DESTINO.partial" "$DESTINO"
+
+# Rotación: conservar solo las últimas $RETENCION copias
+find "$DIR" -maxdepth 1 -name "${BD}_*.sql.gz" -type f | sort | head -n -"$RETENCION" | xargs -r rm -f
+
+echo "Copia creada: $DESTINO"
