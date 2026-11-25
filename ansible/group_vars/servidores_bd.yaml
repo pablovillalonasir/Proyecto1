@@ -1,0 +1,8 @@
+# Copias de seguridad de la base de datos
+backup_dir: /var/backups/mariadb          # punto de montaje del NFS en bd
+backup_retencion: 7                       # número de copias que se conservan
+backup_oncalendar: "*-*-* 03:00:00"       # cuándo se ejecuta (formato systemd)
+
+# Directorios del NAS que monta esta máquina (lo usa el rol nfs_client)
+nfs_montajes:
+  - { export: "{{ nfs_export_backups }}", path: "{{ backup_dir }}" }
