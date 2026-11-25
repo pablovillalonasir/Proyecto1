@@ -2,15 +2,17 @@
   apt:
     pkg: nfs-common
 
-- name: crear el punto de montaje (directorio de la aplicación)
+- name: crear los puntos de montaje
   file:
-    path: "{{ web_docroot }}"
+    path: "{{ item.path }}"
     state: directory
+  loop: "{{ nfs_montajes }}"
 
-- name: montar el directorio compartido del NAS (persistente en /etc/fstab)
+- name: montar los directorios compartidos del NAS (persistentes en /etc/fstab)
   ansible.posix.mount:
-    path: "{{ web_docroot }}"
-    src: "{{ ip_nas_balanceo }}:{{ nfs_export }}"
+    path: "{{ item.path }}"
+    src: "{{ ip_nas_balanceo }}:{{ item.export }}"
     fstype: nfs
     opts: "_netdev,hard"
     state: mounted
+  loop: "{{ nfs_montajes }}"
