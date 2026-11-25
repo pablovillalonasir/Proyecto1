@@ -1,0 +1,3 @@
+- name: recargar systemd
+  systemd:
+    daemon_reload: true
