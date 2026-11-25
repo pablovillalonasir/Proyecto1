@@ -1,0 +1,44 @@
+- name: instalar el script de copia de seguridad
+  template:
+    src: backup-db.sh.j2
+    dest: /usr/local/sbin/backup-db.sh
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: instalar el script de restauración
+  template:
+    src: restore-db.sh.j2
+    dest: /usr/local/sbin/restore-db.sh
+    owner: root
+    group: root
+    mode: "0750"
+
+- name: unidad systemd del servicio de copia
+  template:
+    src: backup-db.service.j2
+    dest: /etc/systemd/system/backup-db.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - recargar systemd
+
+- name: unidad systemd del temporizador
+  template:
+    src: backup-db.timer.j2
+    dest: /etc/systemd/system/backup-db.timer
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - recargar systemd
+
+- name: recargar systemd antes de activar el temporizador
+  meta: flush_handlers
+
+- name: temporizador de copias habilitado y arrancado
+  systemd:
+    name: backup-db.timer
+    enabled: true
+    state: started
