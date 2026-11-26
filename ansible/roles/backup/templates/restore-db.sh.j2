@@ -1,0 +1,25 @@
+#!/bin/bash
+# Generado por Ansible: no lo edites a mano
+# Uso: restore-db.sh [fichero.sql.gz] [base_de_datos_destino]
+#   Sin argumentos: restaura la última copia en la base de datos de la aplicación.
+set -euo pipefail
+
+DIR="{{ backup_dir }}"
+BD="{{ db_nombre }}"
+
+FICHERO="${1:-}"
+DESTINO="${2:-$BD}"
+
+if [ -z "$FICHERO" ]; then
+    FICHERO=$(find "$DIR" -maxdepth 1 -name "${BD}_*.sql.gz" -type f | sort | tail -n 1)
+fi
+
+if [ -z "$FICHERO" ] || [ ! -f "$FICHERO" ]; then
+    echo "ERROR: no hay ninguna copia que restaurar" >&2
+    exit 1
+fi
+
+echo "Restaurando $FICHERO en la base de datos $DESTINO"
+mariadb -e "CREATE DATABASE IF NOT EXISTS \`$DESTINO\`"
+zcat "$FICHERO" | mariadb "$DESTINO"
+echo "Restauración terminada"
