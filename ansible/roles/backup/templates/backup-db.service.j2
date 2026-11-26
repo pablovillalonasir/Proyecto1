@@ -1,0 +1,9 @@
+[Unit]
+Description=Copia de seguridad de la base de datos {{ db_nombre }}
+Requires=mariadb.service
+After=mariadb.service
+RequiresMountsFor={{ backup_dir }}
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/backup-db.sh
