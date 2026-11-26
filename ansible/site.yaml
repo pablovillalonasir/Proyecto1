@@ -17,11 +17,13 @@
   roles:
     - role: nfs_server
 
-# 4. base de datos
+# 4. base de datos: MariaDB, montaje del NAS y copias de seguridad
 - hosts: servidores_bd
   become: true
   roles:
     - role: bd
+    - role: nfs_client
+    - role: backup
 
 # 5. servidores web: primero montan el NFS y después despliegan la aplicación
 - hosts: servidores_web
